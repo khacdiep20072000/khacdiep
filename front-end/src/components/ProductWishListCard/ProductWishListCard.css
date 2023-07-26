@@ -1,0 +1,8 @@
+.wishlist-card-image {
+  height: 270px;
+}
+
+.wishlist-card-image img {
+  object-fit: cover;
+  height: 100%;
+}
