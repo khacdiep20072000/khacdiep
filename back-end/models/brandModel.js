@@ -1,7 +1,7 @@
 const mongoose = require("mongoose"); // Erase if already required
 
 // Declare the Schema of the Mongo model
-var brandSchema = new mongoose.Schema(
+const brandSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -9,6 +9,12 @@ var brandSchema = new mongoose.Schema(
       unique: true,
       index: true,
     },
+    images: [
+      {
+        public_id: String,
+        url: String,
+      },
+    ],
   },
   {
     timestamps: true,

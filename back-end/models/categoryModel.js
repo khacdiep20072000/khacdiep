@@ -9,6 +9,12 @@ const categorySchema = new mongoose.Schema(
       unique: true,
       index: true,
     },
+    images: [
+      {
+        public_id: String,
+        url: String,
+      },
+    ],
   },
   { timestamps: true }
 );

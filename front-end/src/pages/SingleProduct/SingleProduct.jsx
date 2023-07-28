@@ -4,20 +4,23 @@ import BreadCrumb from "components/BreadCrumb/BreadCrumb";
 import Meta from "components/Meta/Meta";
 import ReactStars from "react-rating-stars-component";
 import Color from "components/Color/Color";
-import { TbGitCompare } from "react-icons/tb";
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import "./SingleProduct.css";
 import ProductCard from "components/ProductCard/ProductCard";
 import { toast } from "react-toastify";
-import Zoom from "react-img-zoom";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import { getProduct, reviewProduct } from "Features/product/productSlice";
+import {
+  addToWishList,
+  getProduct,
+  getProducts,
+  reviewProduct,
+} from "Features/product/productSlice";
 import {
   addToCart,
   getCart,
+  getWishList,
   updateQuantityProductAddToCart,
 } from "Features/user/userSlice";
 
@@ -43,15 +46,13 @@ const SingleProduct = (props) => {
 
   useEffect(() => {
     dispatch(getProduct(productId));
-    dispatch(getCart());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     for (let i = 0; i < cart?.length; i++) {
       if (productId === cart[i]?.product?._id) {
         setAlreadyAdded(true);
-        setCartId(cart[i]._id);
+        setCartId(cart[i]?._id);
       }
     }
   }, []);
@@ -59,6 +60,10 @@ const SingleProduct = (props) => {
   const product = useSelector((state) => state.product.product);
   const cart = useSelector((state) => state.auth.cartUser);
   const products = useSelector((state) => state.product.products);
+  const wishlist = useSelector((state) => state.auth.wishList);
+  const [liked, setLiked] = useState(
+    wishlist?.some((item) => item?._id === product?._id)
+  );
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -68,7 +73,7 @@ const SingleProduct = (props) => {
     onSubmit: (values) => {
       dispatch(
         reviewProduct({
-          productId: product._id,
+          productId: product?._id,
           star: rating,
           comment: values.comment,
         })
@@ -86,17 +91,29 @@ const SingleProduct = (props) => {
     }
     if (alreadyAdded === false) {
       const newCart = {
-        product: product._id,
+        product: product?._id,
         quantity: quantity,
         color: color,
         price: product.price,
       };
       dispatch(addToCart(newCart));
+      setTimeout(() => dispatch(getCart()), [300]);
     } else {
       const data = { newQuantity: quantity, cartId: cartId };
       dispatch(updateQuantityProductAddToCart(data));
       setTimeout(() => dispatch(getCart()), [300]);
     }
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      dispatch(getWishList());
+    }, 300);
+  }, [liked]);
+
+  const handlerAddToWishlist = () => {
+    setLiked((prev) => !prev);
+    dispatch(addToWishList(product?._id));
   };
 
   return (
@@ -109,23 +126,22 @@ const SingleProduct = (props) => {
           <div className="row">
             <div className="col-6">
               <div className="main-product-image">
-                <div>
-                  <Zoom
-                    img={product?.images[0]?.url}
-                    height={500}
-                    width={600}
-                    zoomScale={2}
-                  />
+                <img
+                  src={product?.images[0]?.url}
+                  alt=""
+                  className="img-fluid"
+                />
+
+                <div className="other-product-images d-flex flex-wrap gap-15">
+                  {product?.images.map((image, index) => (
+                    <div key={index}>
+                      <img src={image.url} className="img-fluid" alt="" />
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="other-product-images d-flex flex-wrap gap-15">
-                {product?.images.map((image, index) => (
-                  <div key={index}>
-                    <img src={image.url} className="img-fluid" alt="" />
-                  </div>
-                ))}
-              </div>
             </div>
+
             <div className="col-6">
               <div className="main-product-details">
                 <div className="border-bottom">
@@ -221,21 +237,27 @@ const SingleProduct = (props) => {
                       >
                         <span>Add to Cart</span>
                       </button>
-                      <button className="button signup">
+                      {/* <button className="button signup">
                         <span>Buy It Now</span>
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                   <div className="d-flex align-items-center gap-15">
-                    <div>
+                    {/* <div>
                       <a href="">
                         <TbGitCompare className="fs-5 me-2" /> Add to Compare
                       </a>
-                    </div>
-                    <div>
-                      <a href="">
-                        <AiOutlineHeart className="fs-5 me-2" /> Add to Wishlist
-                      </a>
+                    </div> */}
+                    <div
+                      onClick={handlerAddToWishlist}
+                      className={liked ? "text-danger" : " "}
+                    >
+                      {liked ? (
+                        <AiFillHeart className="fs-5 me-2" />
+                      ) : (
+                        <AiOutlineHeart className="fs-5 me-2" />
+                      )}
+                      Add to Wishlist
                     </div>
                   </div>
                   <div className="d-flex gap-10 flex-column  my-3">
@@ -351,22 +373,21 @@ const SingleProduct = (props) => {
                   </form>
                 </div>
                 <div className="reviews mt-4">
-                  {product &&
-                    product?.ratings?.map((rating) => (
-                      <div className="review" key={rating._id}>
-                        <div className="d-flex gap-10 align-items-center">
-                          <h6 className="mb-0">{rating?.postedby.name}</h6>
-                          <ReactStars
-                            count={5}
-                            size={24}
-                            value={parseInt(rating?.star)}
-                            edit={false}
-                            activeColor="#ffd700"
-                          />
-                        </div>
-                        <p className="mt-3">{rating?.comment}</p>
+                  {product?.ratings?.map((rating) => (
+                    <div className="review" key={rating._id}>
+                      <div className="d-flex gap-10 align-items-center">
+                        <h6 className="mb-0">{rating?.postedby.name}</h6>
+                        <ReactStars
+                          count={5}
+                          size={24}
+                          value={parseInt(rating?.star)}
+                          edit={false}
+                          activeColor="#ffd700"
+                        />
                       </div>
-                    ))}
+                      <p className="mt-3">{rating?.comment}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -384,9 +405,7 @@ const SingleProduct = (props) => {
           <div className="row">
             {products &&
               products?.map((product) => {
-                if (product.tags === "popular") {
-                  return <ProductCard key={product._id} product={product} />;
-                }
+                return <ProductCard key={product._id} product={product} />;
               })}
           </div>
         </div>

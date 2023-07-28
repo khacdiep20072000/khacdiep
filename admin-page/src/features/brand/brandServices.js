@@ -20,7 +20,7 @@ const createBrand = async (brand) => {
 const updateBrand = async (brandData) => {
   const res = await axios.put(
     `${base_url}brand/${brandData.id}`,
-    { title: brandData.brandData.title },
+    { title: brandData.brandData.title, images: brandData.brandData.images },
     config
   );
   return res.data;

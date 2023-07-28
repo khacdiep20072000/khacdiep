@@ -24,6 +24,7 @@ import { PrivateRoutes } from "routing/PrivateRoute";
 import { OpenRoutes } from "routing/OpenRoute";
 import Order from "pages/Order/Order";
 import Profile from "pages/Profile/Profile";
+import OrderSuccess from "pages/OrderSuccess/OrderSuccess";
 
 function App() {
   return (
@@ -83,6 +84,14 @@ function App() {
             element={
               <PrivateRoutes>
                 <Order />
+              </PrivateRoutes>
+            }
+          />
+          <Route
+            path="order-detail"
+            element={
+              <PrivateRoutes>
+                <OrderSuccess />
               </PrivateRoutes>
             }
           />

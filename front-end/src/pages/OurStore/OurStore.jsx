@@ -14,15 +14,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllCategories } from "Features/Category/CategorySlice";
 import { toast } from "react-toastify";
 import { getBrandProduct, getProducts } from "Features/product/productSlice";
+import { AiOutlineClose } from "react-icons/ai";
+import { useSearchParams } from "react-router-dom";
 
 const OurStore = () => {
+  const [queryParameters] = useSearchParams();
   const [grid, setGrid] = useState(4);
   const dispatch = useDispatch();
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(
+    queryParameters.get("category") || ""
+  );
   const [sort, setSort] = useState(null);
   const [brand, setBrand] = useState(null);
+  const [active, setActive] = useState(queryParameters.get("c_id") || null);
+  const [activeB, setActiveB] = useState(null);
 
   const allProducts = useSelector((state) => state.product.products);
   const allCategories = useSelector((state) => state.category.allCategories);
@@ -30,14 +37,8 @@ const OurStore = () => {
 
   useEffect(() => {
     getProduct();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, sort, brand]);
-
-  useEffect(() => {
-    dispatch(getAllCategories());
-    dispatch(getBrandProduct());
-  }, []);
 
   const handlerSubmit = (e) => {
     e.preventDefault();
@@ -76,10 +77,24 @@ const OurStore = () => {
                   {allCategories &&
                     allCategories.map((category) => (
                       <li
-                        key={category._id}
-                        onClick={() => setCategory(category.title)}
+                        className={
+                          (active === category?._id ? "active " : "") +
+                          "d-flex justify-content-between align-items-center px-3"
+                        }
+                        key={category?._id}
                       >
-                        {category.title}
+                        <span
+                          onClick={() => {
+                            setCategory(category?.title);
+                            setActive(category?._id);
+                          }}
+                        >
+                          {category.title}
+                        </span>
+                        <AiOutlineClose
+                          onClick={() => setActive(null)}
+                          className={active === category?._id ? "" : "d-none"}
+                        />
                       </li>
                     ))}
                 </ul>
@@ -90,8 +105,28 @@ const OurStore = () => {
                 <ul className="ps-0">
                   {allBrands &&
                     allBrands.map((brand) => (
-                      <li key={brand._id} onClick={() => setBrand(brand.title)}>
-                        {brand.title}
+                      <li
+                        className={
+                          (activeB === brand?._id ? "active " : "") +
+                          "d-flex justify-content-between align-items-center px-3"
+                        }
+                        key={brand._id}
+                      >
+                        <span
+                          onClick={() => {
+                            setActiveB(brand?._id);
+                            setBrand(brand?.title);
+                          }}
+                        >
+                          {brand?.title}
+                        </span>
+                        <AiOutlineClose
+                          onClick={() => {
+                            setBrand(null);
+                            setActiveB(null);
+                          }}
+                          className={activeB === brand?._id ? "" : "d-none"}
+                        />
                       </li>
                     ))}
                 </ul>
@@ -100,8 +135,8 @@ const OurStore = () => {
               <div className="filter-card mb-3">
                 <h3 className="filter-title">Filter By</h3>
                 <div>
-                  <h5 className="sub-title">Available</h5>
-                  <div>
+                  {/* <h5 className="sub-title">Available</h5> */}
+                  {/* <div>
                     <div className="form-check">
                       <input
                         className="form-check-input"
@@ -124,7 +159,7 @@ const OurStore = () => {
                         Out of Stock(0)
                       </label>
                     </div>
-                  </div>
+                  </div> */}
 
                   <h5 className="sub-title">Price</h5>
                   <form
@@ -207,68 +242,6 @@ const OurStore = () => {
                   </div> */}
                 </div>
               </div>
-
-              <div className="filter-card mb-3">
-                <h3 className="filter-title">Product Tags</h3>
-                <div>
-                  <div className="product-tags d-flex flex-wrap align-items-center gap-10">
-                    <span className="bg-light text-secondary rounded-3 py-2 px-3">
-                      Wire
-                    </span>
-                    <span className="bg-light text-secondary rounded-3 py-2 px-3">
-                      Laptop
-                    </span>
-                    <span className="bg-light text-secondary rounded-3 py-2 px-3">
-                      Mobile
-                    </span>
-                    <span className="bg-light text-secondary rounded-3 py-2 px-3">
-                      Headphone
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="filter-card mb-3">
-                <h3 className="filter-title">Random Product</h3>
-                <div>
-                  <div className="random-products mb-3 d-flex">
-                    <div className="w-50">
-                      <img src={watch} className="img-fluid" alt="watch" />
-                    </div>
-                    <div className="w-50">
-                      <h5>
-                        Kids headphones bulk 10 pack multi colored for students
-                      </h5>
-                      <ReactStars
-                        count={5}
-                        size={24}
-                        value={4}
-                        edit={false}
-                        activeColor="#ffd700"
-                      />
-                      <b>$ 300</b>
-                    </div>
-                  </div>
-                  <div className="random-products d-flex">
-                    <div className="w-50">
-                      <img src={watch2} className="img-fluid" alt="watch" />
-                    </div>
-                    <div className="w-50">
-                      <h5>
-                        Kids headphones bulk 10 pack multi colored for students
-                      </h5>
-                      <ReactStars
-                        count={5}
-                        size={24}
-                        value={4}
-                        edit={false}
-                        activeColor="#ffd700"
-                      />
-                      <b>$ 300</b>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
 
             <div className="col-9">
@@ -341,7 +314,7 @@ const OurStore = () => {
                   {allProducts &&
                     allProducts.map((product) => (
                       <ProductCard
-                        key={product._id}
+                        key={product?._id}
                         product={product}
                         grid={grid}
                       />

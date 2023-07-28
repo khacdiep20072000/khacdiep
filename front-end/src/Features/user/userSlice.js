@@ -15,6 +15,7 @@ const initialState = {
   informationUser: null,
   cartUser: null,
   wishList: [],
+  createdOrder: null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -190,7 +191,7 @@ export const authSlice = createSlice({
         state.message = "Success";
         state.newUser = action.payload;
         if (state.isSuccess === true) {
-          toast.success("Product Added Successfully!");
+          toast.success("Account is register!");
         }
       })
       .addCase(registerUser.rejected, (state, action) => {
@@ -250,7 +251,6 @@ export const authSlice = createSlice({
         state.message = "Success";
         state.cart = action.payload;
         toast.success("Add to cart success.");
-        console.log(action.payload);
       })
       .addCase(addToCart.rejected, (state, action) => {
         state.isLoading = false;
@@ -336,6 +336,7 @@ export const authSlice = createSlice({
         state.isSuccess = true;
         state.isError = false;
         state.message = "Success";
+        state.createdOrder = action.payload;
         toast.success("Order created successfully.");
       })
       .addCase(createOrder.rejected, (state, action) => {

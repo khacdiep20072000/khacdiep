@@ -55,16 +55,12 @@
   padding: 20px;
   background-color: white;
   border-radius: 10px;
-}
-
-.main-product-image > div {
-  border: 1px solid rgba(0, 0, 0, 0.25);
+  height: 100%;
 }
 
 .main-product-image img {
   width: 100% !important;
-  height: 600px !important;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .other-product-images {
@@ -90,6 +86,7 @@
   padding: 30px 20px;
   background-color: white;
   border-radius: 10px;
+  height: 100%;
 }
 
 .border-bottom {

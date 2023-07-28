@@ -45,16 +45,21 @@ const AddProduct = () => {
   const colors = useSelector((state) => state.color.colors);
   const images = useSelector((state) => state.upload.images);
   const newProductState = useSelector((state) => state.product);
-  const { isSuccess, isError, isLoading, newProduct } = newProductState;
+  const { isSuccess, isError, newProduct } = newProductState;
 
   useEffect(() => {
     if (isSuccess && newProduct) {
       toast.success("Product Added Successfully!");
+      setColor(null);
+      setTimeout(() => {
+        dispatch(resetState());
+      }, 300);
     }
     if (isError) {
       toast.error("Something Went Wrong!");
     }
-  }, [isSuccess, isError, isLoading, newProduct]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess, isError, newProduct]);
 
   const coloropt = [];
   colors.forEach((i) => {
@@ -86,17 +91,13 @@ const AddProduct = () => {
       quantity: "",
       brand: "",
       category: "",
-      images: "",
+      images: [],
       tags: "",
     },
     validationSchema: SignupSchema,
     onSubmit: (values) => {
       dispatch(createProduct(values));
       formik.resetForm();
-      setColor(null);
-      setTimeout(() => {
-        dispatch(resetState());
-      }, 300);
     },
   });
 

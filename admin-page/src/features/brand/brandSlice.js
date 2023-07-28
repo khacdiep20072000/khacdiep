@@ -11,6 +11,7 @@ const initialState = {
   newBrand: null,
   updatedBrand: null,
   deletedBrand: null,
+  brandImage: null,
 };
 
 export const getBrands = createAsyncThunk(
@@ -115,6 +116,7 @@ export const brandSlice = createSlice({
         state.isError = false;
         state.isSuccess = true;
         state.brandName = action.payload.title;
+        state.brandImage = action.payload.images;
       })
       .addCase(getBrand.rejected, (state, action) => {
         state.isLoading = false;

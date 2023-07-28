@@ -118,6 +118,10 @@ a {
   padding-left: 4px;
 }
 
+.active {
+  color: #ee4d2d;
+}
+
 .form-floating > .form-control-plaintext ~ label::after,
 .form-floating > .form-control:focus ~ label::after,
 .form-floating > .form-control:not(:placeholder-shown) ~ label::after,

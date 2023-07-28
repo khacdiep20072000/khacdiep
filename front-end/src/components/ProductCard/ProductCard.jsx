@@ -1,23 +1,34 @@
 import ReactStars from "react-rating-stars-component";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./ProductCard.css";
-import prodcompare from "../../images/prodcompare.svg";
 import view from "../../images/view.svg";
-import addcart from "../../images/add-cart.svg";
-import wish from "../../images/wish.svg";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { addToWishList } from "Features/product/productSlice";
+import { getWishList } from "Features/user/userSlice";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
 const ProductCard = (props) => {
   const { grid, product } = props;
   const navigate = useNavigate();
-  let location = useLocation();
+  const location = useLocation();
   const dispatch = useDispatch();
 
   const handlerAddToWishlist = () => {
+    setLiked((prev) => !prev);
     dispatch(addToWishList(product._id));
   };
+
+  const wishlist = useSelector((state) => state.auth.wishList);
+  const [liked, setLiked] = useState(
+    wishlist?.some((item) => item._id === product._id)
+  );
+
+  useEffect(() => {
+    setTimeout(() => {
+      dispatch(getWishList());
+    }, 300);
+  }, [liked]);
 
   return (
     <div
@@ -28,10 +39,12 @@ const ProductCard = (props) => {
       <div className="product-card position-relative">
         <div className="wishlist-icon position-absolute z-3">
           <button
-            className="border-0 bg-transparent"
+            className={
+              "border-0 bg-transparent " + (liked ? "text-danger" : " ")
+            }
             onClick={handlerAddToWishlist}
           >
-            <img src={wish} alt="wishlist" />
+            {liked ? <AiFillHeart /> : <AiOutlineHeart />}
           </button>
         </div>
         <div className="product-image">
@@ -39,7 +52,9 @@ const ProductCard = (props) => {
         </div>
         <div className="product-details">
           <h6 className="brand">{product?.brand}</h6>
-          <h5 className="product-title">{product?.title}</h5>
+          <Link to={`/product/${product._id}`} className="product-title">
+            <h5 className="mb-0">{product?.title}</h5>
+          </Link>
           <ReactStars
             count={5}
             size={24}
@@ -59,17 +74,11 @@ const ProductCard = (props) => {
         <div className="action-bar position-absolute">
           <div className="d-flex flex-column gap-15">
             <button className="border-0 bg-transparent">
-              <img src={prodcompare} alt="compare" />
-            </button>
-            <button className="border-0 bg-transparent">
               <img
                 src={view}
                 alt="view"
                 onClick={() => navigate(`/product/${[product._id]}`)}
               />
-            </button>
-            <button className="border-0 bg-transparent">
-              <img src={addcart} alt="addcart" />
             </button>
           </div>
         </div>

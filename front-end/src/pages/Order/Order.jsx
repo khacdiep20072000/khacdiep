@@ -8,11 +8,10 @@ const Order = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getOrdersUser());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const orderUser = useSelector((state) => state.auth.orderUser);
-
-  console.log(orderUser);
 
   return (
     <>
@@ -45,15 +44,18 @@ const Order = () => {
             <div className="col-12 mt-3">
               {orderUser
                 ? orderUser.map((order) => (
-                    <div className="row my-3 border-bottom border-secondary">
+                    <div
+                      className="row my-3 border-bottom border-secondary"
+                      key={order._id}
+                    >
                       <div className="col-3">
                         {order.orderItems.map((item) => (
-                          <p>{item.product.title}</p>
+                          <p key={item._id}>{item.product.title}</p>
                         ))}
                       </div>
                       <div className="col-2 text-center">
                         {order.orderItems.map((item) => (
-                          <p>{item.quantity}</p>
+                          <p key={item._id}>{item.quantity}</p>
                         ))}
                       </div>
                       <div className="col-2 text-center">

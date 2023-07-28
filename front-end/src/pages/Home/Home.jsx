@@ -1,6 +1,6 @@
 /* eslint-disable array-callback-return */
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Marquee from "react-fast-marquee";
 
 import "./Home.css";
@@ -14,18 +14,6 @@ import services2 from "../../images/service-02.png";
 import services3 from "../../images/service-03.png";
 import services4 from "../../images/service-04.png";
 import services5 from "../../images/service-05.png";
-import camera from "../../images/camera.jpg";
-import smartTv from "../../images/tv.jpg";
-import smartWatch from "../../images/headphone.jpg";
-import music from "../../images/speaker.jpg";
-import brand1 from "../../images/brand-01.png";
-import brand2 from "../../images/brand-02.png";
-import brand3 from "../../images/brand-03.png";
-import brand4 from "../../images/brand-04.png";
-import brand5 from "../../images/brand-05.png";
-import brand6 from "../../images/brand-06.png";
-import brand7 from "../../images/brand-07.png";
-import brand8 from "../../images/brand-08.png";
 import BlogCard from "components/BlogCard/BlogCard";
 import ProductCard from "components/ProductCard/ProductCard";
 import SpecialProduct from "components/SpecialProduct/SpecialProduct";
@@ -34,25 +22,36 @@ import famous2 from "../../images/famous-2.webp";
 import famous3 from "../../images/famous-3.webp";
 import famous4 from "../../images/famous-4.webp";
 import { useDispatch, useSelector } from "react-redux";
-import { getProducts } from "Features/product/productSlice";
+import { getBrandProduct, getProducts } from "Features/product/productSlice";
 import { getBlogs } from "Features/Blog/BlogSlice";
-import { getCart } from "Features/user/userSlice";
+import { getCart, getWishList } from "Features/user/userSlice";
+import { getAllCategories } from "Features/Category/CategorySlice";
+import Meta from "components/Meta/Meta";
 
 const Home = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // const currentUser = useSelector((state) => state.auth.user);
+  const products = useSelector((state) => state.product.products);
+  const blogs = useSelector((state) => state.blog.blogs);
+  const brands = useSelector((state) => state.product.brandProduct);
+  const categories = useSelector((state) => state.category.allCategories);
 
   useEffect(() => {
     dispatch(getProducts());
     dispatch(getBlogs());
+    dispatch(getBrandProduct());
+    dispatch(getAllCategories());
     dispatch(getCart());
+    dispatch(getWishList());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const products = useSelector((state) => state.product.products);
-  // const blogs = useSelector((state) => state.blog.blogs);
-
   return (
     <>
+      <Meta title={"Hygge."} />
+
       <section className="home-wrapper-1 py-5">
         <div className="container-xxl">
           <div className="row">
@@ -192,69 +191,26 @@ const Home = () => {
           <div className="row">
             <div className="col-12">
               <div className="categories d-flex flex-wrap justify-content-between align-items-center">
-                <div className="d-flex gap-30 align-items-center justify-content-center">
-                  <div>
-                    <h6>Camera</h6>
-                    <p>10 items</p>
-                  </div>
-                  <img src={camera} alt="" />
-                </div>
-
-                <div className="d-flex gap-30 align-items-center justify-content-center">
-                  <div>
-                    <h6>Smart Tv</h6>
-                    <p>10 items</p>
-                  </div>
-                  <img src={smartTv} alt="" />
-                </div>
-
-                <div className="d-flex gap-30 align-items-center justify-content-center">
-                  <div>
-                    <h6>Smart Watch</h6>
-                    <p>10 items</p>
-                  </div>
-                  <img src={smartWatch} alt="" />
-                </div>
-
-                <div className="d-flex gap-30 align-items-center justify-content-center">
-                  <div>
-                    <h6>Music & Gaming</h6>
-                    <p>10 items</p>
-                  </div>
-                  <img src={music} alt="" />
-                </div>
-
-                <div className="d-flex gap-30 align-items-center justify-content-center">
-                  <div>
-                    <h6>Camera</h6>
-                    <p>10 items</p>
-                  </div>
-                  <img src={camera} alt="" />
-                </div>
-
-                <div className="d-flex gap-30 align-items-center justify-content-center">
-                  <div>
-                    <h6>Smart Tv</h6>
-                    <p>10 items</p>
-                  </div>
-                  <img src={smartTv} alt="" />
-                </div>
-
-                <div className="d-flex gap-30 align-items-center justify-content-center">
-                  <div>
-                    <h6>Smart Watch</h6>
-                    <p>10 items</p>
-                  </div>
-                  <img src={smartWatch} alt="" />
-                </div>
-
-                <div className="d-flex gap-30 align-items-center justify-content-center">
-                  <div>
-                    <h6>Music & Gaming</h6>
-                    <p>10 items</p>
-                  </div>
-                  <img src={music} alt="" />
-                </div>
+                {categories &&
+                  categories?.map((category) => (
+                    <div
+                      className="d-flex gap-30 align-items-center justify-content-center"
+                      key={category._id}
+                      onClick={() =>
+                        navigate(
+                          `/product?category=${category.title}&c_id=${category._id}`,
+                          {
+                            replace: true,
+                          }
+                        )
+                      }
+                    >
+                      <div>
+                        <h6>{category?.title}</h6>
+                      </div>
+                      <img src={category?.images[0].url} alt="" />
+                    </div>
+                  ))}
               </div>
             </div>
           </div>
@@ -377,37 +333,12 @@ const Home = () => {
             <div className="col-12">
               <div className="marquee-inner-wrapper card-wrapper">
                 <Marquee className="d-flex">
-                  <div className="mx-4 w-25">
-                    <img src={brand1} alt="" />
-                  </div>
-
-                  <div className="mx-4 w-25">
-                    <img src={brand2} alt="" />
-                  </div>
-
-                  <div className="mx-4 w-25">
-                    <img src={brand3} alt="" />
-                  </div>
-
-                  <div className="mx-4 w-25">
-                    <img src={brand4} alt="" />
-                  </div>
-
-                  <div className="mx-4 w-25">
-                    <img src={brand5} alt="" />
-                  </div>
-
-                  <div className="mx-4 w-25">
-                    <img src={brand6} alt="" />
-                  </div>
-
-                  <div className="mx-4 w-25">
-                    <img src={brand7} alt="" />
-                  </div>
-
-                  <div className="mx-4 w-25">
-                    <img src={brand8} alt="" />
-                  </div>
+                  {brands &&
+                    brands.map((brand) => (
+                      <div className="mx-4 w-25" key={brand._id}>
+                        <img src={brand?.images[0]?.url} alt="" />
+                      </div>
+                    ))}
                 </Marquee>
               </div>
             </div>
@@ -419,22 +350,15 @@ const Home = () => {
         <div className="container-xxl">
           <div className="row">
             <div className="col-12">
-              <h3 className="section-heading">Our Latest Blogs</h3>
+              <h3 className="section-heading">Our Blogs</h3>
             </div>
 
-            {/* {blogs && blogs.map(blog =>)} */}
-            <div className="col-3">
-              <BlogCard />
-            </div>
-            <div className="col-3">
-              <BlogCard />
-            </div>
-            <div className="col-3">
-              <BlogCard />
-            </div>
-            <div className="col-3">
-              <BlogCard />
-            </div>
+            {blogs &&
+              blogs.map((blog) => (
+                <div className="col-3" key={blog._id}>
+                  <BlogCard blog={blog} />
+                </div>
+              ))}
           </div>
         </div>
       </section>

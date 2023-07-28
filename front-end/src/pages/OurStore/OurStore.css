@@ -22,6 +22,10 @@
   cursor: pointer;
 }
 
+.filter-card li span {
+  flex: 1;
+}
+
 .filter-card li:hover {
   background-color: var(--color-ededed);
 }
@@ -57,7 +61,7 @@
   position: relative;
 }
 
-label:before {
+.colors label:before {
   content: "";
   position: absolute;
   width: 15px;

@@ -20,7 +20,10 @@ const createCategory = async (category) => {
 const updateCategory = async (categoryData) => {
   const res = await axios.put(
     `${base_url}category/${categoryData.id}`,
-    { title: categoryData.categoryData.title },
+    {
+      title: categoryData.categoryData.title,
+      images: categoryData.categoryData.images,
+    },
     config
   );
   return res.data;

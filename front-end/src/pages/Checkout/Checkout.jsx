@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -28,12 +28,9 @@ const Checkout = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [province, setProvince] = useState([]);
   const [district, setDistrict] = useState([]);
-  const [paymentInfo, setPaymentInfo] = useState({
-    razorPayOrderId: "",
-    razorPayPaymentId: "",
-  });
   const [shippingInfo, setShippingInfo] = useState({});
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -42,6 +39,9 @@ const Checkout = () => {
   }, []);
 
   const cart = useSelector((state) => state.auth.cartUser);
+  const order = useSelector((state) => state.auth);
+
+  const { createdOrder, isSuccess } = order;
 
   useEffect(() => {
     let sum = 0;
@@ -86,7 +86,7 @@ const Checkout = () => {
 
       setTimeout(() => {
         handlerCheckout();
-      }, 300);
+      }, 600);
     },
   });
 
@@ -152,27 +152,28 @@ const Checkout = () => {
           razorPayOrderId: response.razorpay_order_id,
         };
 
-        const result = await axios.post(
+        await axios.post(
           "http://localhost:4000/api/user/order/payment-verification",
           data,
           config
         );
 
-        setPaymentInfo({
-          razorPayPaymentId: response.razorpay_payment_id,
-          razorPayOrderId: response.razorpay_order_id,
-        });
-
         const dataOrder = {
           shippingInfo,
           orderItems: cart,
           totalPrice: totalAmount,
-          paymentInfo,
+          paymentInfo: data,
         };
 
         setTimeout(() => {
           dispatch(createOrder(dataOrder));
         }, 300);
+
+        if (createdOrder && isSuccess) {
+          setTimeout(() => {
+            navigate("/order-detail", { replace: true });
+          }, 400);
+        }
       },
 
       prefill: {

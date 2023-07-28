@@ -1,19 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import BreadCrumb from "components/BreadCrumb/BreadCrumb";
 import Meta from "components/Meta/Meta";
 import "./Wishlist.css";
-import { useDispatch, useSelector } from "react-redux";
-import { getWishList } from "Features/user/userSlice";
+import { useSelector } from "react-redux";
 import ProductWishListCard from "components/ProductWishListCard/ProductWishListCard";
 
 const Wishlist = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getWishList());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const wishlist = useSelector((state) => state.auth.wishList);
 
   return (

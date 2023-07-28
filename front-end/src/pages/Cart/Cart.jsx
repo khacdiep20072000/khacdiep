@@ -16,11 +16,6 @@ const Cart = () => {
   const dispatch = useDispatch();
   const [totalAmount, setTotalAmount] = useState(0);
 
-  useEffect(() => {
-    dispatch(getCart());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const cart = useSelector((state) => state.auth.cartUser);
 
   const handlerDeleteProduct = (id) => {
@@ -31,8 +26,10 @@ const Cart = () => {
   const handlerUpdateQuantity = (quantity, cartId) => {
     const data = { newQuantity: quantity, cartId: cartId };
     dispatch(updateQuantityProductFromCart(data));
+    setTimeout(() => {
+      dispatch(getCart());
+    }, 200);
     setTimeout(() => toast.success("Quantity updated successfully."), [300]);
-    dispatch(getCart());
   };
 
   useEffect(() => {

@@ -201,45 +201,6 @@ const totalRating = asyncHandler(async (req, res) => {
   }
 });
 
-// const deleteImages = asyncHandler(async (req, res) => {
-//   const { id } = req.params;
-//   // validateMongoDbId(id);
-//   try {
-//     const uploader = cloudinaryDeleteImg(id, "images");
-//     res.json({ message: "delete images" });
-//   } catch (error) {
-//     throw new Error(error);
-//   }
-// });
-
-// const uploadImages = asyncHandler(async (req, res) => {
-//   const { id } = req.params;
-//   validateMongoDbId(id);
-//   try {
-//     const uploader = (path) => cloudinaryUploadImg(path, "images");
-//     const urls = [];
-//     const files = req.files;
-//     for (const file of files) {
-//       const { path } = file;
-//       const newPath = await uploader(path);
-//       urls.push(newPath);
-//       fs.unlinkSync(path);
-//     }
-//     const findProduct = await Product.findByIdAndUpdate(
-//       id,
-//       {
-//         images: urls.map((file) => {
-//           return file;
-//         }),
-//       },
-//       { new: true }
-//     );
-//     res.json(findProduct);
-//   } catch (error) {
-//     throw new Error(error);
-//   }
-// });
-
 module.exports = {
   createProduct,
   getProduct,
