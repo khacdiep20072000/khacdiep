@@ -23,9 +23,13 @@ const updateProduct = asyncHandler(async (req, res) => {
     if (req.body.title) {
       req.body.slug = slugify(req.body.title);
     }
-    const updateProduct = await Product.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
+    const updateProduct = await Product.findByIdAndUpdate(
+      id,
+      { $set: req.body },
+      {
+        new: true,
+      }
+    );
     res.json(updateProduct);
   } catch (error) {
     throw new Error(error);
@@ -73,7 +77,7 @@ const getAllProducts = asyncHandler(async (req, res) => {
       (match) => `$${match}`
     );
 
-    let query = Product.find(JSON.parse(queryString));
+    let query = Product.find(JSON.parse(queryString)).populate("color");
 
     //sort
     if (req.query.sort) {

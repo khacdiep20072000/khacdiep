@@ -5,7 +5,7 @@ import { Button, Layout, Menu, theme } from "antd";
 import { useState } from "react";
 import { ImBlog } from "react-icons/im";
 import { IoIosNotifications } from "react-icons/io";
-import { FaClipboardList, FaBloggerB } from "react-icons/fa";
+import { FaClipboardList, FaBloggerB, FaSignOutAlt } from "react-icons/fa";
 import { SiBrandfolder } from "react-icons/si";
 import { BiCategoryAlt } from "react-icons/bi";
 import { RiCouponLine } from "react-icons/ri";
@@ -15,7 +15,7 @@ import {
   AiOutlineUser,
   AiOutlineBgColors,
 } from "react-icons/ai";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 const { Header, Sider, Content } = Layout;
 
@@ -38,6 +38,8 @@ const MainLayout = () => {
           defaultSelectedKeys={["1"]}
           onClick={({ key }) => {
             if (key === "signout") {
+              localStorage.clear();
+              window.location.reload();
             } else {
               navigate(key);
             }
@@ -154,6 +156,11 @@ const MainLayout = () => {
               icon: <FaClipboardList className="fs-4" />,
               label: "Enquiries",
             },
+            {
+              key: "signout",
+              icon: <FaSignOutAlt className="fs-4" />,
+              label: "Logout",
+            },
           ]}
         />
       </Sider>
@@ -185,7 +192,7 @@ const MainLayout = () => {
               </span>
             </div>
 
-            <div className="d-flex gap-3 align-items-center dropdown">
+            <div className="d-flex gap-3 align-items-center ">
               <div>
                 <img
                   width={42}
@@ -195,34 +202,9 @@ const MainLayout = () => {
                   alt=""
                 />
               </div>
-              <div
-                role="button"
-                id="dropdownMenuLink"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
+              <div>
                 <h5 className="mb-0">{userCurrent.name}</h5>
                 <p className="mb-0">{userCurrent.email}</p>
-              </div>
-              <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <li>
-                  <Link
-                    className="dropdown-item py-1 mb-1"
-                    style={{ height: "auto", lineHeight: "20px" }}
-                    to="/"
-                  >
-                    View Profile
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="dropdown-item py-1 mb-1"
-                    style={{ height: "auto", lineHeight: "20px" }}
-                    to="/"
-                  >
-                    Signout
-                  </Link>
-                </li>
               </div>
             </div>
           </div>

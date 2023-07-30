@@ -24,15 +24,31 @@ import AddProduct from "pages/Product/AddProduct";
 import AddCoupon from "pages/CouponList/AddCoupon";
 import ViewEnquiry from "pages/Enquiries/ViewEnquiry";
 import ViewOrder from "pages/Order/ViewOrder";
+import { PrivateRoutes } from "routing/PrivateRoute";
+import { OpenRoutes } from "routing/OpenRoute";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route
+          path="/"
+          element={
+            <OpenRoutes>
+              <Login />
+            </OpenRoutes>
+          }
+        />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/admin" element={<MainLayout />}>
+        <Route
+          path="/admin"
+          element={
+            <PrivateRoutes>
+              <MainLayout />
+            </PrivateRoutes>
+          }
+        >
           <Route index element={<Dashboard />} />
           <Route path="enquiries" element={<Enquiries />} />
           <Route path="enquiries/:id" element={<ViewEnquiry />} />
@@ -57,6 +73,7 @@ function App() {
           <Route path="brand" element={<AddBrand />} />
           <Route path="brand/:id" element={<AddBrand />} />
           <Route path="product" element={<AddProduct />} />
+          <Route path="product/:id" element={<AddProduct />} />
           <Route path="coupon" element={<AddCoupon />} />
           <Route path="coupon/:id" element={<AddCoupon />} />
         </Route>

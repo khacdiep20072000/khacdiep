@@ -10,8 +10,14 @@ import { Select } from "antd";
 import { getColors } from "features/color/colorSlice";
 import Dropzone from "react-dropzone";
 import { deleteImg, uploadImg } from "features/upload/uploadSlice";
-import { createProduct, resetState } from "features/product/productSlice";
+import {
+  createProduct,
+  getProduct,
+  resetState,
+  updateProduct,
+} from "features/product/productSlice";
 import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router-dom";
 
 const SignupSchema = Yup.object().shape({
   title: Yup.string().required("Title is required."),
@@ -32,25 +38,57 @@ const SignupSchema = Yup.object().shape({
 
 const AddProduct = () => {
   const dispatch = useDispatch();
-  const [color, setColor] = useState([]);
+  const navigate = useNavigate();
+
+  const { id } = useParams();
 
   useEffect(() => {
     dispatch(getBrands());
     dispatch(getCategories());
     dispatch(getColors());
-  }, [dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (id !== undefined) {
+      dispatch(getProduct(id));
+    } else {
+      dispatch(resetState());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   const brands = useSelector((state) => state.brand.brands);
   const categories = useSelector((state) => state.category.categories);
   const colors = useSelector((state) => state.color.colors);
   const images = useSelector((state) => state.upload.images);
+  const product = useSelector((state) => state.product.product);
   const newProductState = useSelector((state) => state.product);
-  const { isSuccess, isError, newProduct } = newProductState;
+  const {
+    isSuccess,
+    isError,
+    newProduct,
+    updateProduct: updateProductState,
+  } = newProductState;
+
+  const [color, setColor] = useState([]);
+
+  useEffect(() => {
+    if (product) setColor((prev) => product?.color?.map((c) => c._id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product]);
 
   useEffect(() => {
     if (isSuccess && newProduct) {
       toast.success("Product Added Successfully!");
-      setColor(null);
+      setColor([]);
+      setTimeout(() => {
+        dispatch(resetState());
+      }, 300);
+    }
+    if (isSuccess && updateProductState) {
+      toast.success("Product Updated Successfully!");
+      setColor([]);
       setTimeout(() => {
         dispatch(resetState());
       }, 300);
@@ -62,6 +100,7 @@ const AddProduct = () => {
   }, [isSuccess, isError, newProduct]);
 
   const coloropt = [];
+
   colors.forEach((i) => {
     coloropt.push({
       label: i.title,
@@ -78,36 +117,51 @@ const AddProduct = () => {
   });
 
   useEffect(() => {
-    formik.values.color = color ? color : " ";
     formik.values.images = img;
+    formik.values.color = color ? color : "";
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [color, img]);
+  }, [images, color]);
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      title: "",
-      description: "",
-      price: "",
-      quantity: "",
-      brand: "",
-      category: "",
-      images: [],
-      tags: "",
+      title: product?.title || "",
+      description: product?.description || "",
+      price: parseInt(product?.price) || 0,
+      quantity: parseInt(product?.quantity) || 1,
+      brand: product?.brand || "",
+      category: product?.category || "",
+      tags: product?.tags || "",
     },
     validationSchema: SignupSchema,
     onSubmit: (values) => {
-      dispatch(createProduct(values));
-      formik.resetForm();
+      if (id !== undefined) {
+        const data = { id: id, productData: values };
+        dispatch(updateProduct(data));
+        formik.resetForm();
+        setTimeout(() => {
+          dispatch(resetState());
+        }, 100);
+        setTimeout(() => {
+          navigate("/admin/list-product", { replace: true });
+        }, 1000);
+      } else {
+        dispatch(createProduct(values));
+        formik.resetForm();
+        setTimeout(() => {
+          dispatch(resetState());
+        }, 300);
+      }
     },
   });
 
-  const handleColors = (e) => {
-    setColor(e);
+  const handleColors = (value) => {
+    setColor(value);
   };
 
   return (
     <div>
-      <h3 className="mb-4 title">Add Product</h3>
+      <h3 className="mb-4 title">{id ? "Edit" : "Add"} Product</h3>
       <div>
         <form
           action=""
@@ -145,7 +199,7 @@ const AddProduct = () => {
                 type="number"
                 label="Enter Product Price"
                 name="price"
-                value={formik.values.price}
+                val={formik.values.price}
                 onBlr={formik.handleBlur("price")}
                 onChng={formik.handleChange("price")}
               />
@@ -159,7 +213,7 @@ const AddProduct = () => {
                 type="number"
                 label="Enter Product Quantity"
                 name="quantity"
-                value={formik.values.quantity}
+                val={formik.values.quantity}
                 onBlr={formik.handleBlur("quantity")}
                 onChng={formik.handleChange("quantity")}
               />
@@ -233,8 +287,8 @@ const AddProduct = () => {
             allowClear
             className="w-100"
             placeholder="Select colors"
-            defaultValue={color}
-            onChange={(i) => handleColors(i)}
+            value={color}
+            onChange={handleColors}
             options={coloropt}
           />
           <div className="error">
@@ -277,7 +331,7 @@ const AddProduct = () => {
             className="btn btn-success border-0 rounded-3 my-5"
             type="submit"
           >
-            Add Product
+            {id ? "Edit" : "Add"} Product
           </button>
         </form>
       </div>

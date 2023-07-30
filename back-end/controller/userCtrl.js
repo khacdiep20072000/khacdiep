@@ -468,6 +468,115 @@ const getOrdersUser = asyncHandler(async (req, res) => {
   }
 });
 
+const getMonthTotalOrder = asyncHandler(async (req, res) => {
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  let date = new Date();
+  let endDate;
+  date.setDate(1);
+  for (let i = 0; i < 11; i++) {
+    date.setMonth(date.getMonth() - 1);
+    endDate = months[date.getMonth()] + " " + date.getFullYear();
+  }
+  const data = await Order.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $lte: new Date(),
+          $gte: new Date(endDate),
+        },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          month: "$month",
+        },
+        amount: { $sum: "$totalPrice" },
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+  res.json(data);
+});
+
+const getYearTotalOrder = asyncHandler(async (req, res) => {
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  let date = new Date();
+  let endDate;
+  date.setDate(1);
+  for (let i = 0; i < 11; i++) {
+    date.setMonth(date.getMonth() - 1);
+    endDate = months[date.getMonth()] + " " + date.getFullYear();
+  }
+  const data = await Order.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $lte: new Date(),
+          $gte: new Date(endDate),
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        count: { $sum: 1 },
+        amount: { $sum: "$totalPrice" },
+      },
+    },
+  ]);
+  res.json(data);
+});
+
+const getAllOrders = asyncHandler(async (req, res) => {
+  try {
+    const allUserOrders = await Order.find();
+    res.json(allUserOrders);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+const getOrder = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongoDbId(id);
+  try {
+    const order = await Order.findById(id)
+      .populate("orderItems.product")
+      .populate("orderItems.color");
+
+    res.json(order);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
 // const emptyCart = asyncHandler(async (req, res) => {
 //   const { _id } = req.user;
 //   validateMongoDbId(_id);
@@ -533,18 +642,6 @@ const getOrdersUser = asyncHandler(async (req, res) => {
 //   }
 // });
 
-// const getAllOrders = asyncHandler(async (req, res) => {
-//   try {
-//     const allUserOrders = await Order.find()
-//       .populate("products.product")
-//       .populate("orderby")
-//       .exec();
-//     res.json(allUserOrders);
-//   } catch (error) {
-//     throw new Error(error);
-//   }
-// });
-
 // const updateOrderStatus = asyncHandler(async (req, res) => {
 //   const { status } = req.body;
 //   const { id } = req.params;
@@ -588,4 +685,8 @@ module.exports = {
   createOrder,
   getOrdersUser,
   getMyInformation,
+  getMonthTotalOrder,
+  getYearTotalOrder,
+  getAllOrders,
+  getOrder,
 };

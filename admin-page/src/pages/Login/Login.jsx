@@ -28,13 +28,15 @@ const Login = () => {
   });
   const authState = useSelector((state) => state);
   const { isSuccess, message } = authState.auth;
+
   useEffect(() => {
     if (isSuccess) {
-      navigate("admin");
-    } else {
-      navigate("");
+      setTimeout(() => {
+        navigate("/admin", { replace: true });
+      }, 500);
     }
-  }, [isSuccess, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess]);
 
   return (
     <div className="py-4" style={{ background: "var(--color-ffd333)" }}>

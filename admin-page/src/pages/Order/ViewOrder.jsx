@@ -26,7 +26,7 @@ const columns = [
     dataIndex: "color",
   },
   {
-    title: "Amount",
+    title: "Price",
     dataIndex: "amount",
   },
   {
@@ -47,18 +47,24 @@ const ViewOrder = () => {
 
   const orderState = useSelector((state) => state.auth.productOrder);
 
-  const data1 = [];
-  for (let i = 0; i < orderState.length; i++) {
-    data1.push({
-      key: i + 1,
-      name: orderState[i].product.title,
-      brand: orderState[i].product.brand,
-      count: orderState[i].count,
-      amount: orderState[i].product.price,
-      color: orderState[i].product.color,
-      date: new Date(orderState[i].product.createdAt).toLocaleString("en-GB"),
-    });
-  }
+  const data1 = orderState?.orderItems.map((items, index) => ({
+    key: index + 1,
+    name: items?.product.title,
+    brand: items?.product?.brand,
+    count: items?.quantity,
+    amount: items?.price,
+    color: (
+      <span
+        className="rounded-circle d-block"
+        style={{
+          backgroundColor: `${items?.color.title}`,
+          width: "20px",
+          height: "20px",
+        }}
+      ></span>
+    ),
+    date: new Date(items.product.createdAt).toLocaleString("en-GB"),
+  }));
 
   return (
     <div>

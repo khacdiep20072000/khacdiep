@@ -1,63 +1,86 @@
-import React from "react";
-import { BsArrowDownRight, BsArrowUpRight } from "react-icons/bs";
+import React, { useEffect, useState } from "react";
 import { Column } from "@ant-design/plots";
 import { Table } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getMonthOrders,
+  getOrders,
+  getYearOrders,
+} from "features/auth/authSlice";
 
 const Dashboard = () => {
-  const data = [
-    {
-      type: "Jan",
-      sales: 38,
-    },
-    {
-      type: "Feb",
-      sales: 52,
-    },
-    {
-      type: "Mar",
-      sales: 61,
-    },
-    {
-      type: "Apr",
-      sales: 145,
-    },
-    {
-      type: "May",
-      sales: 48,
-    },
-    {
-      type: "Jun",
-      sales: 38,
-    },
-    {
-      type: "July",
-      sales: 38,
-    },
-    {
-      type: "Aug",
-      sales: 38,
-    },
-    {
-      type: "Sept",
-      sales: 38,
-    },
-    {
-      type: "Oct",
-      sales: 38,
-    },
-    {
-      type: "Nov",
-      sales: 38,
-    },
-    {
-      type: "Dec",
-      sales: 38,
-    },
-  ];
+  const [dataMonth, setDataMonth] = useState([]);
+  const [dataOrder, setDataOrder] = useState([]);
+  const dispatch = useDispatch();
+
+  const monthOrders = useSelector((state) => state.auth.monthOrders);
+  const yearOrders = useSelector((state) => state.auth.yearOrders);
+  const orders = useSelector((state) => state.auth.orders);
+
+  useEffect(() => {
+    dispatch(getMonthOrders());
+    dispatch(getYearOrders());
+    dispatch(getOrders());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const data = monthOrders?.map((item) => {
+      return {
+        type: `Month ${item._id?.month}`,
+        sales: item?.count,
+        amount: item?.amount,
+      };
+    });
+    setDataMonth(data);
+
+    const data1 = orders?.map((order, index) => {
+      return {
+        key: index + 1,
+        name: order?.shippingInfo?.name,
+        product: order?.orderItems?.length,
+        amount: order?.totalPrice,
+        status: order?.orderStatus,
+      };
+    });
+    setDataOrder(data1);
+  }, [monthOrders, yearOrders, orders]);
+
   const config = {
-    data,
+    data: dataMonth ? dataMonth : [],
     xField: "type",
     yField: "sales",
+    color: ({ type }) => {
+      return "#ffd333";
+    },
+    label: {
+      position: "middle",
+      style: {
+        fill: "#FFFFFF",
+        opacity: 1,
+      },
+    },
+    xAxis: {
+      label: {
+        autoHide: true,
+        autoRotate: false,
+      },
+    },
+    meta: {
+      type: {
+        alias: "Month",
+      },
+      sales: {
+        alias: "Sales",
+      },
+    },
+  };
+
+  const config1 = {
+    data: dataMonth ? dataMonth : [],
+    xField: "type",
+    yField: "amount",
     color: ({ type }) => {
       return "#ffd333";
     },
@@ -94,81 +117,76 @@ const Dashboard = () => {
       dataIndex: "name",
     },
     {
-      title: "Product",
+      title: "Order Quantity",
       dataIndex: "product",
+    },
+    {
+      title: "Total Amount",
+      dataIndex: "amount",
     },
     {
       title: "Status",
       dataIndex: "status",
     },
   ];
-  const data1 = [];
-  for (let i = 0; i < 46; i++) {
-    data1.push({
-      key: i,
-      name: `Edward King ${i}`,
-      product: 32,
-      status: `London, Park Lane no. ${i}`,
-    });
-  }
 
   return (
     <div>
       <h3 className="mb-4 title">Dashboard</h3>
       <div className="d-flex justify-content-between align-items-center gap-3">
-        <div className="d-flex justify-content-between align-items-end flex-grow-1 bg-white p-3 roudned-3">
+        <div className="d-flex gap-3 justify-content-between align-items-end flex-grow-1 bg-white p-3 rounded-3">
           <div>
-            <p className="desc">Total</p>
-            <h4 className="mb-0 sub-title">1.100$</h4>
+            <p className="desc">Total Income</p>
+            <h4 className="mb-0 sub-title">
+              {yearOrders && yearOrders[0]?.amount}$
+            </h4>
           </div>
 
-          <div className="d-flex flex-column align-items-end">
+          {/* <div className="d-flex flex-column align-items-end">
             <h6 className="red">
               <BsArrowDownRight /> 32%
             </h6>
             <p className="mb-0 desc">Compared to April 2022</p>
-          </div>
+          </div> */}
         </div>
-        <div className="d-flex justify-content-between align-items-end flex-grow-1 bg-white p-3 roudned-3">
+        <div className="d-flex gap-3 justify-content-between align-items-end flex-grow-1 bg-white p-3 rounded-3">
           <div>
-            <p className="desc">Total</p>
-            <h4 className="mb-0 sub-title">1.100$</h4>
+            <p className="desc">Total Sales</p>
+            <h4 className="mb-0 sub-title">
+              {yearOrders && yearOrders[0]?.count}
+            </h4>
           </div>
 
-          <div className="d-flex flex-column align-items-end">
+          {/* <div className="d-flex flex-column align-items-end">
             <h6 className="red">
               <BsArrowDownRight />
               32%
             </h6>
             <p className="mb-0 desc">Compared to April 2022</p>
-          </div>
-        </div>
-        <div className="d-flex justify-content-between align-items-end flex-grow-1 bg-white p-3 roudned-3">
-          <div>
-            <p className="desc">Total</p>
-            <h4 className="mb-0 sub-title">1.100$</h4>
-          </div>
-
-          <div className="d-flex flex-column align-items-end">
-            <h6 className="green">
-              <BsArrowUpRight /> 32%
-            </h6>
-            <p className="mb-0 desc">Compared to April 2022</p>
-          </div>
+          </div> */}
         </div>
       </div>
 
-      <div className="mt-4">
-        <h3 className="mb-4">Income Statics</h3>
-        <div>
-          <Column {...config} />
+      <div className="d-flex gap-3 justify-content-between">
+        <div className="mt-4 w-50">
+          <h3 className="mb-4">Sales Statics</h3>
+          <div>
+            <Column {...config} />
+          </div>
+        </div>
+
+        <div className="mt-4 w-50">
+          <h3 className="mb-4">Income Statics</h3>
+          <div>
+            <Column {...config1} />
+          </div>
         </div>
       </div>
 
       <div className="mt-4">
         <h3 className="mb-4">Recent Orders</h3>
         <div>
-          <Table columns={columns} dataSource={data1} />
+          <Table columns={columns} dataSource={dataOrder} />
         </div>
       </div>
     </div>

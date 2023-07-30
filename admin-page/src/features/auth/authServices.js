@@ -29,11 +29,31 @@ const updateOrder = async (order) => {
   return res.data;
 };
 
+const getMonthOrders = async () => {
+  const res = await axios.get(
+    `${base_url}user/get-month-total-order`,
+
+    config
+  );
+  return res.data;
+};
+
+const getYearOrders = async () => {
+  const res = await axios.get(
+    `${base_url}user/get-year-total-order`,
+
+    config
+  );
+  return res.data;
+};
+
 const authService = {
   login,
   getOrders,
   getOrder,
   updateOrder,
+  getMonthOrders,
+  getYearOrders,
 };
 
 export default authService;
