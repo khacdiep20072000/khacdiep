@@ -37,8 +37,11 @@ const Login = () => {
   }, [isSuccess, navigate]);
 
   return (
-    <div className="py-4" style={{ background: "var(--color-ffd333)" }}>
-      <div className="my-5 w-25 bg-white rounded-3 mx-auto p-3">
+    <div
+      className=" vh-100 d-flex justify-content-center align-items-center "
+      style={{ background: "var(--color-ffd333)" }}
+    >
+      <div className=" w-25 bg-white rounded-3 p-3 h-auto pb-4">
         <h3 className="text-center title">Login</h3>
         <p className="text-center">Login to your account to continue.</p>
         <div className="error text-center">

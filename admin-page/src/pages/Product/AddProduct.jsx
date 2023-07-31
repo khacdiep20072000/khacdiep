@@ -50,9 +50,11 @@ const AddProduct = () => {
   useEffect(() => {
     if (isSuccess && newProduct) {
       toast.success("Product Added Successfully!");
+      formik.resetForm();
     }
     if (isError) {
       toast.error("Something Went Wrong!");
+      formik.resetForm();
     }
   }, [isSuccess, isError, isLoading, newProduct]);
 
@@ -78,21 +80,20 @@ const AddProduct = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [color, img]);
 
-  const formik = useFormik({
-    initialValues: {
-      title: "",
-      description: "",
-      price: "",
-      quantity: "",
-      brand: "",
-      category: "",
-      images: "",
-      tags: "",
-    },
+    const formik = useFormik({
+      initialValues: {
+        title: "",
+        description: "",
+        price: 0,
+        quantity: 1,
+        brand: "",
+        category: "",
+        images: "",
+        tags: "",
+      },
     validationSchema: SignupSchema,
     onSubmit: (values) => {
       dispatch(createProduct(values));
-      formik.resetForm();
       setColor(null);
       setTimeout(() => {
         dispatch(resetState());

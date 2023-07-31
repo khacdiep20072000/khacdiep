@@ -92,6 +92,7 @@ const SingleProduct = (props) => {
         price: product.price,
       };
       dispatch(addToCart(newCart));
+      dispatch(getCart());
     } else {
       const data = { newQuantity: quantity, cartId: cartId };
       dispatch(updateQuantityProductAddToCart(data));
