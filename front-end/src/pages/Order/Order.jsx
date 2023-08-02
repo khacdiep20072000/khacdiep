@@ -23,19 +23,17 @@ const Order = () => {
           <div className="row">
             <div className="col-12">
               <div className="row ">
-                <div className="col-3">
+                <div className="col-5 col-sm-4">
                   <h5>Product</h5>
                 </div>
-                <div className="col-2 text-center">
+                <div className="d-none d-sm-inline-block col-3 text-center">
                   <h5>Quantity</h5>
                 </div>
-                <div className="col-2 text-center">
+                <div className="col-3 text-center">
                   <h5>Total Amount</h5>
                 </div>
-                <div className="col-3">
-                  <h5>Total Amount after Discount</h5>
-                </div>
-                <div className="col-1">
+
+                <div className="col-4 col-sm-2 text-center">
                   <h5>Delivery</h5>
                 </div>
               </div>
@@ -48,21 +46,21 @@ const Order = () => {
                       className="row my-3 border-bottom border-secondary"
                       key={order._id}
                     >
-                      <div className="col-3">
+                      <div className="col-5 col-sm-4 ">
                         {order.orderItems.map((item) => (
                           <p key={item._id}>{item.product.title}</p>
                         ))}
                       </div>
-                      <div className="col-2 text-center">
+                      <div className="d-none d-sm-inline-block col-sm-3 text-center">
                         {order.orderItems.map((item) => (
                           <p key={item._id}>{item.quantity}</p>
                         ))}
                       </div>
-                      <div className="col-2 text-center">
+                      <div className="col-3 text-center">
                         <p>$ {order.totalPrice}</p>
                       </div>
-                      <div className="col-3">Total Amount after Discount</div>
-                      <div className="col-2">
+
+                      <div className="col-4 col-sm-2 text-center">
                         <p>{order.orderStatus}</p>
                       </div>
                     </div>

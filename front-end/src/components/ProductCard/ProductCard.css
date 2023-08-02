@@ -4,6 +4,7 @@
   border-radius: 10px;
   overflow: hidden;
   width: 100%;
+  margin-bottom: 8px;
 }
 
 .product-card .product-image {
@@ -12,7 +13,7 @@
 }
 
 .product-card .product-image img {
-  object-fit: cover;
+  object-fit: contain;
   height: 270px;
   width: 100%;
 }

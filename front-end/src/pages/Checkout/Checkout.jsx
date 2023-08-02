@@ -196,8 +196,8 @@ const Checkout = () => {
   return (
     <div className="checkout-wrapper home-wrapper-2 py-5">
       <div className="container-xxl">
-        <div className="row">
-          <div className="col-7">
+        <div className="row d-flex flex-column-reverse flex-md-row">
+          <div className="col-12 col-md-7">
             <div className="checkout-left-data">
               <h3 className="website-name">Dev Corner</h3>
               <nav
@@ -268,7 +268,7 @@ const Checkout = () => {
                   </div>
                 </div>
 
-                <div className="d-flex w-100 justify-content-between gap-2">
+                <div className="d-flex w-100 flex-wrap justify-content-between gap-2">
                   <div className="flex-grow-1">
                     <select
                       className="form-select"
@@ -361,11 +361,12 @@ const Checkout = () => {
               </form>
             </div>
           </div>
-          <div className="col-5">
+
+          <div className="col-12 col-md-5">
             <div className="border-bottom py-4">
               {cart?.map((c) => (
                 <div
-                  className="d-flex gap-10 mb-3  pb-2 border-bottom  border-secondary"
+                  className="d-flex gap-10 mb-3 pb-2 border-bottom  border-secondary"
                   key={c._id}
                 >
                   <div className="w-75 d-flex gap-10 align-items-center">
@@ -374,13 +375,17 @@ const Checkout = () => {
                         className="img-fluid"
                         src={c?.product.images[0].url}
                         alt="product"
-                        style={{ height: "100px", width: "100px" }}
+                        style={{
+                          height: "100px",
+                          width: "100px",
+                          objectFit: "cover",
+                        }}
                       />
                     </div>
                     <div>
                       <h5 className="total-price">{c.product.title}</h5>
                       <h5 className="total-price">$ {c.price}</h5>
-                      <h5 className="total-price">{c.quantity}</h5>
+                      <h5 className="total-price">Quantity: {c.quantity}</h5>
                       <span
                         className="rounded-circle "
                         style={{
@@ -392,7 +397,8 @@ const Checkout = () => {
                       ></span>
                     </div>
                   </div>
-                  <div className="flex-grow-1">
+
+                  <div className="w-25 d-flex justify-content-end">
                     <h5 className="total">$ {c.quantity * c.price}</h5>
                   </div>
                 </div>

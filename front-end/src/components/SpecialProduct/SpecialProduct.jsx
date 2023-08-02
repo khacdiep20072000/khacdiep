@@ -9,17 +9,17 @@ const SpecialProduct = (props) => {
 
   return (
     <>
-      <div className="col-6 mb-3">
+      <div className="col-12 col-md-6 mb-3">
         <div className="special-product-card">
-          <div className="d-flex justify-content-between">
-            <div>
+          <div className="d-flex flex-column flex-sm-row justify-content-between gap-4">
+            <div className="w-100 w-sm-50">
               <img
                 src={product?.images[0].url}
                 className="img-fluid"
                 alt="watch"
               />
             </div>
-            <div className="special-product-content">
+            <div className="w-100 w-sm-50 special-product-content">
               <h5 className="brand">{product?.brand}</h5>
               <h6
                 className="title"

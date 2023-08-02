@@ -6,9 +6,9 @@ const getProducts = async (data) => {
   const res = await axios.get(
     `${base_url}product?${
       data?.minPrice ? `price[gte]=${data?.minPrice}&&` : "&&"
-    }${data?.maxPrice ? `price[lte]=${data?.maxPrice}` : "&&"}${
-      data?.category ? `category=${data?.category}` : "&&"
-    }${data?.sort ? `sort=${data?.sort}` : "&&"}${
+    }${data?.maxPrice ? `price[lte]=${data?.maxPrice}&&` : "&&"}${
+      data?.category ? `category=${data?.category}&&` : "&&"
+    }${data?.sort ? `sort=${data?.sort}&&` : "&&"}${
       data?.brand ? `brand=${data?.brand}` : "&&"
     }`
   );

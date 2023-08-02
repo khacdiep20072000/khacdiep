@@ -55,13 +55,14 @@ const AddProduct = () => {
     } else {
       dispatch(resetState());
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const brands = useSelector((state) => state.brand.brands);
   const categories = useSelector((state) => state.category.categories);
   const colors = useSelector((state) => state.color.colors);
-  const images = useSelector((state) => state.upload.images);
+  const imagesState = useSelector((state) => state.upload.images);
   const product = useSelector((state) => state.product.product);
   const newProductState = useSelector((state) => state.product);
   const {
@@ -72,9 +73,18 @@ const AddProduct = () => {
   } = newProductState;
 
   const [color, setColor] = useState([]);
+  const [image, setImage] = useState([]);
 
   useEffect(() => {
-    if (product) setColor((prev) => product?.color?.map((c) => c._id));
+    if (product) {
+      setColor(product?.color?.map((c) => c._id));
+
+      const img = product?.images?.map((i) => ({
+        public_id: i.public_id,
+        url: i.url,
+      }));
+      setImage(img);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product]);
 
@@ -96,8 +106,9 @@ const AddProduct = () => {
     if (isError) {
       toast.error("Something Went Wrong!");
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess, isError, newProduct]);
+  }, [isSuccess, isError, updateProductState, newProduct]);
 
   const coloropt = [];
 
@@ -109,7 +120,7 @@ const AddProduct = () => {
   });
 
   const img = [];
-  images.forEach((i) => {
+  imagesState.forEach((i) => {
     img.push({
       public_id: i.public_id,
       url: i.url,
@@ -118,9 +129,15 @@ const AddProduct = () => {
 
   useEffect(() => {
     formik.values.images = img;
-    formik.values.color = color ? color : "";
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [images, color]);
+  }, [imagesState]);
+
+  useEffect(() => {
+    formik.setFieldValue("color", color ? color : "");
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [color]);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -132,10 +149,12 @@ const AddProduct = () => {
       brand: product?.brand || "",
       category: product?.category || "",
       tags: product?.tags || "",
+      images: image || [],
     },
     validationSchema: SignupSchema,
     onSubmit: (values) => {
       if (id !== undefined) {
+        console.log(values);
         const data = { id: id, productData: values };
         dispatch(updateProduct(data));
         formik.resetForm();
@@ -312,7 +331,7 @@ const AddProduct = () => {
             </Dropzone>
           </div>
           <div className="showimages d-flex flex-wrap gap-3">
-            {images?.map((image) => {
+            {imagesState?.map((image) => {
               return (
                 <div className=" position-relative" key={image.public_id}>
                   <button

@@ -10,7 +10,7 @@
   line-height: 20px;
   font-weight: 600;
   color: var(--color-1c1c1b);
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }
 
 .filter-card ul,

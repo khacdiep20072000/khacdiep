@@ -46,18 +46,89 @@ const Header = () => {
       <header className="header-top-strip py-3">
         <div className="container-xxl">
           <div className="row">
-            <div className="col-6">
+            <div className="d-none d-md-block col-sm-6">
               <p className="text-white mb-0">
                 Free Shipping Over $100 & Free Returns
               </p>
             </div>
-            <div className="col-6">
-              <p className="text-end text-white mb-0">
+
+            <div className="col-sm-6 col-0">
+              <p className="d-sm-block d-none text-md-end text-white mb-0">
                 Hotline:
                 <a className="text-white" href="tel:+84 374 707 502">
                   +84374707502
                 </a>
               </p>
+            </div>
+
+            <div className="d-block d-sm-none col-5">
+              <h2>
+                <Link to="/" className="text-white">
+                  Hygge.
+                </Link>
+              </h2>
+            </div>
+
+            <div className="d-flex justify-content-end col-md-0 col-7 col-sm-6">
+              {currentUser ? (
+                <div className="d-md-none d-flex align-items-center justify-content-end gap-10 text-white dropdown show">
+                  <Link
+                    className="d-flex align-items-center gap-10 text-white"
+                    href="#"
+                    role="button"
+                    id="dropdownMenuLink"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <p className="mb-0">{currentUser.name}</p>
+                  </Link>
+
+                  <div
+                    className="dropdown-menu mt-4"
+                    aria-labelledby="dropdownMenuLink"
+                  >
+                    <Link
+                      className="dropdown-item"
+                      style={{ height: "auto", lineHeight: "20px" }}
+                      to="/my-profile"
+                    >
+                      View Profile
+                    </Link>
+
+                    <Link
+                      className="dropdown-item"
+                      style={{ height: "auto", lineHeight: "20px" }}
+                      to="/my-order"
+                    >
+                      My Order
+                    </Link>
+
+                    <button
+                      className="dropdown-item"
+                      style={{ height: "auto", lineHeight: "20px" }}
+                      onClick={() => handlerLogout()}
+                    >
+                      Signout
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <Link
+                    to="/login"
+                    className="d-md-none justify-content-end d-flex  align-items-center gap-10 text-white"
+                  >
+                    <div className="">
+                      <p className="mb-0">
+                        <Link className="text-white " to="/login">
+                          Login
+                        </Link>
+                      </p>
+                    </div>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -66,15 +137,16 @@ const Header = () => {
       <header className="header-upper py-3">
         <div className="container-xxl">
           <div className="row align-items-center">
-            <div className="col-2">
+            <div className="d-sm-block d-none col-md-2 col-3">
               <h2>
                 <Link to="/" className="text-white">
                   Hygge.
                 </Link>
               </h2>
             </div>
-            <div className="col-5">
-              <div className="input-group">
+
+            <div className="col-9 col-sm-7 col-md-5">
+              <div className="d-flex input-group">
                 <Typeahead
                   id="pagination-example"
                   onPaginate={() => console.log("Results paginated")}
@@ -96,12 +168,12 @@ const Header = () => {
                 </span>
               </div>
             </div>
-            <div className="col-5">
+            <div className="col-3 col-sm-2 col-md-5 ">
               <div className="header-upper-links d-flex align-items-center justify-content-between ">
                 <div>
                   <Link
                     to="/compare-product"
-                    className="d-flex align-items-center gap-10 text-white"
+                    className="d-md-flex d-none align-items-center gap-10 text-white"
                   >
                     <img src={compare} alt="compare img" />
                     <p className="mb-0">Compare</p>
@@ -110,14 +182,14 @@ const Header = () => {
 
                 <Link
                   to="/wishlist"
-                  className="d-flex align-items-center gap-10 text-white"
+                  className="d-md-flex d-none align-items-center gap-10 text-white"
                 >
                   <img src={wishlist} alt="wishlist img" />
                   <p className="mb-0">Wishlist</p>
                 </Link>
 
                 {currentUser ? (
-                  <div className="d-flex align-items-center gap-10 text-white dropdown show">
+                  <div className="d-md-flex d-none align-items-center gap-10 text-white dropdown show">
                     <Link
                       className="d-flex align-items-center gap-10 text-white"
                       href="#"
@@ -164,7 +236,7 @@ const Header = () => {
                   <div>
                     <Link
                       to="/login"
-                      className="d-flex align-items-center gap-10 text-white"
+                      className="d-md-flex d-none align-items-center gap-10 text-white"
                     >
                       <img src={user} alt="user img" />
                       <div className="d-flex flex-column gap-10">
@@ -190,9 +262,9 @@ const Header = () => {
                     <img src={cartIcon} alt="cart img" />
                     <div className="d-flex flex-column gap-10">
                       <span className="badge bg-white text-dark">
-                        {cart?.length}
+                        {cart?.length || 0}
                       </span>
-                      <p className="mb-0">${totalAmount}</p>
+                      <p className="d-none d-sm-flex mb-0">${totalAmount}</p>
                     </div>
                   </Link>
                 </div>
@@ -206,39 +278,15 @@ const Header = () => {
         <div className="container-xxl">
           <div className="row">
             <div className="col-12">
-              <div className="menu-bottom d-flex align-items-center gap-30">
+              <div className="menu-bottom d-sm-flex align-items-center gap-30">
                 <div>
-                  <div className="dropdown">
-                    <button
-                      className="btn btn-secondary dropdown-toggle bg-transparent border-0 gap-15 d-flex align-items-center"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <img src={menu} alt="" />
-                      <span>Shop Categories</span>
-                    </button>
-                    <ul className="dropdown-menu">
-                      <li>
-                        <Link className="dropdown-item text-white" to="/">
-                          Action
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item text-white" to="/">
-                          Another action
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item text-white" to="/">
-                          Something else here
-                        </Link>
-                      </li>
-                    </ul>
+                  <div className="d-none d-sm-flex btn btn-secondary bg-transparent border-0 gap-15 d-flex align-items-center">
+                    <img src={menu} alt="" />
+                    <span>Shop Categories</span>
                   </div>
                 </div>
                 <div className="menu-links">
-                  <div className="d-flex align-items-center gap-15">
+                  <div className="d-flex justify-content-between align-items-center gap-15">
                     <NavLink to="/">Home</NavLink>
                     <NavLink to="/product">Our Store</NavLink>
                     <NavLink to="/blog">Blogs</NavLink>

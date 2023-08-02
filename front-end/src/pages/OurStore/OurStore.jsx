@@ -1,25 +1,23 @@
 import React, { useEffect, useState } from "react";
-import ReactStars from "react-rating-stars-component";
 import "./OurStore.css";
 import BreadCrumb from "components/BreadCrumb/BreadCrumb";
 import Meta from "components/Meta/Meta";
-import watch from "../../images/watch.jpg";
-import watch2 from "../../images/watch2.png";
 import gr1 from "../../images/gr.svg";
 import gr2 from "../../images/gr2.svg";
 import gr3 from "../../images/gr3.svg";
 import gr4 from "../../images/gr4.svg";
 import ProductCard from "components/ProductCard/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllCategories } from "Features/Category/CategorySlice";
 import { toast } from "react-toastify";
-import { getBrandProduct, getProducts } from "Features/product/productSlice";
+import { getProducts } from "Features/product/productSlice";
 import { AiOutlineClose } from "react-icons/ai";
 import { useSearchParams } from "react-router-dom";
 
 const OurStore = () => {
   const [queryParameters] = useSearchParams();
-  const [grid, setGrid] = useState(4);
+  const [grid, setGrid] = useState(
+    window.innerWidth <= 576 ? 12 : window.innerWidth <= 768 ? 6 : 4
+  );
   const dispatch = useDispatch();
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
@@ -67,11 +65,11 @@ const OurStore = () => {
     <>
       <Meta title={"Our Store"} />
       <BreadCrumb title="Our Store" />
-      <div className="store-wrapper home-wrapper-2 py-5">
+      <div className="store-wrapper home-wrapper-2 py-2 py-sm-5">
         <div className="container-xxl">
           <div className="row">
-            <div className="col-3">
-              <div className="filter-card mb-3">
+            <div className="d-none d-sm-block col-0 col-sm-4 col-md-3">
+              <div className=" filter-card mb-3">
                 <h3 className="filter-title">Categories</h3>
                 <ul className="ps-0">
                   {allCategories &&
@@ -244,7 +242,7 @@ const OurStore = () => {
               </div>
             </div>
 
-            <div className="col-9">
+            <div className="col-12 col-sm-8 col-md-9">
               <div className="filter-sort-grid mb-4">
                 <div className="d-flex justify-content-between align-item-center">
                   <div className="d-flex align-items-center gap-10">
@@ -267,8 +265,7 @@ const OurStore = () => {
                       <option value="-createdAt">Date, new to old</option>
                     </select>
                   </div>
-                  <div className="d-flex align-items-center gap-10">
-                    <p className="totalproducts mb-0">21 Products</p>
+                  <div className="d-none d-md-flex align-items-center gap-10">
                     <div className="d-flex gap-10 align-items-center grid">
                       <img
                         onClick={() => {
@@ -310,7 +307,7 @@ const OurStore = () => {
               </div>
 
               <div className="products-list pb-5">
-                <div className="d-flex gap-10 flex-wrap">
+                <div className="d-flex justify-content-between flex-wrap">
                   {allProducts &&
                     allProducts.map((product) => (
                       <ProductCard

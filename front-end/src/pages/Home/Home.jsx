@@ -55,12 +55,13 @@ const Home = () => {
       <section className="home-wrapper-1 py-5">
         <div className="container-xxl">
           <div className="row">
-            <div className="col-6">
+            <div className="col-md-6 col-12">
               <div className="main-banner position-relative">
                 <img src={banner} alt="" className="img-fluid rounded-3" />
                 <div className="main-banner-content position-absolute">
                   <h4>SUPPER CHARGED FOR PROS.</h4>
-                  <h5>Ipad S13+ Pro.</h5>
+                  <h5 className="d-none d-sm-block">Ipad S13+ Pro.</h5>
+                  <h2 className="d-sm-none">Ipad S13+ Pro.</h2>
                   <p>From $999 or $41.62/mo.</p>
                   <Link className="button">
                     <span>Buy Now</span>
@@ -69,8 +70,8 @@ const Home = () => {
               </div>
             </div>
 
-            <div className="col-6">
-              <div className="d-flex flex-wrap gap-10 justify-content-between align-items-center">
+            <div className="col-md-6 col-0">
+              <div className="d-md-flex d-none flex-wrap gap-10 justify-content-between align-items-center">
                 <div className="small-banner position-relative">
                   <img
                     src={catBanner1}
@@ -136,11 +137,11 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="home-wrapper-2 py-5">
+      <section className="home-wrapper-2 py-md-5">
         <div className="container-xxl">
           <div className="row">
             <div className="col-12">
-              <div className="services d-flex align-items-center justify-content-between">
+              <div className="services d-none d-md-flex align-items-center justify-content-between">
                 <div className="d-flex align-items-center gap-15">
                   <img src={services1} alt="" />
                   <div>
@@ -186,15 +187,15 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="home-wrapper-2 py-5">
+      <section className="home-wrapper-2 py-sm-5">
         <div className="container-xxl">
           <div className="row">
             <div className="col-12">
-              <div className="categories d-flex flex-wrap justify-content-between align-items-center">
+              <div className="categories d-sm-flex d-none flex-wrap justify-content-between align-items-center">
                 {categories &&
                   categories?.map((category) => (
                     <div
-                      className="d-flex gap-30 align-items-center justify-content-center"
+                      className="d-flex gap-30 flex-column flex-md-row align-items-center justify-content-center"
                       key={category._id}
                       onClick={() =>
                         navigate(
@@ -239,7 +240,7 @@ const Home = () => {
       <section className="famous-wrapper py-5 home-wrapper-2">
         <div className="container-xxl">
           <div className="row">
-            <div className="col-3">
+            <div className="col-12 col-sm-6 col-md-3">
               <div className="famous-card position-relative">
                 <img src={famous1} className="img-fluid" alt="famous" />
                 <div className="famous-content position-absolute">
@@ -250,8 +251,8 @@ const Home = () => {
               </div>
             </div>
 
-            <div className="col-3">
-              <div className="famous-card position-relative">
+            <div className="col-12 col-sm-6 col-md-3">
+              <div className="d-none d-sm-block famous-card position-relative">
                 <img src={famous2} className="img-fluid" alt="famous" />
                 <div className="famous-content position-absolute">
                   <h5 className="text-dark">Studio Display</h5>
@@ -261,7 +262,7 @@ const Home = () => {
               </div>
             </div>
             <div className="col-3">
-              <div className="famous-card position-relative">
+              <div className="d-none d-md-block famous-card position-relative">
                 <img src={famous3} className="img-fluid" alt="famous" />
                 <div className="famous-content position-absolute">
                   <h5 className="text-dark">smartphones</h5>
@@ -274,7 +275,7 @@ const Home = () => {
               </div>
             </div>
             <div className="col-3">
-              <div className="famous-card position-relative">
+              <div className="d-none d-md-block famous-card position-relative">
                 <img src={famous4} className="img-fluid" alt="famous" />
                 <div className="famous-content position-absolute">
                   <h5 className="text-dark">home speakers</h5>
@@ -327,11 +328,11 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="marque-wrapper py-5">
+      <section className="marque-wrapper py-sm-5">
         <div className="container-xxl">
           <div className="row">
             <div className="col-12">
-              <div className="marquee-inner-wrapper card-wrapper">
+              <div className="d-none d-sm-block marquee-inner-wrapper card-wrapper">
                 <Marquee className="d-flex">
                   {brands &&
                     brands.map((brand) => (
@@ -355,7 +356,7 @@ const Home = () => {
 
             {blogs &&
               blogs.map((blog) => (
-                <div className="col-3" key={blog._id}>
+                <div className="col-12 col-sm-4 col-md-3" key={blog._id}>
                   <BlogCard blog={blog} />
                 </div>
               ))}

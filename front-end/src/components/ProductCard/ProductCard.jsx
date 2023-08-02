@@ -30,10 +30,14 @@ const ProductCard = (props) => {
     }, 300);
   }, [liked]);
 
+  console.log(grid);
+
   return (
     <div
       className={` ${
-        location.pathname === "/product" ? `gr-${grid}` : "col-3"
+        location.pathname === "/product"
+          ? `gr-${grid}`
+          : "col-12 col-sm-4 col-md-3"
       } `}
     >
       <div className="product-card position-relative">

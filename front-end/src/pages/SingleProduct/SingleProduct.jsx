@@ -124,25 +124,27 @@ const SingleProduct = (props) => {
       <div className="main-product-wrapper py-5 home-wrapper-2">
         <div className="container-xxl">
           <div className="row">
-            <div className="col-6">
-              <div className="main-product-image">
-                <img
-                  src={product?.images[0]?.url}
-                  alt=""
-                  className="img-fluid"
-                />
+            <div className="col-12 col-md-6">
+              <div className="w-100 main-product-image">
+                <div>
+                  <img
+                    src={product?.images[0]?.url}
+                    alt=""
+                    className="img-fluid"
+                  />
+                </div>
 
-                <div className="other-product-images d-flex flex-wrap gap-15">
+                <div className="other-product-images d-flex justify-content-between flex-wrap flex-sm-no-wrap w-100">
                   {product?.images.map((image, index) => (
                     <div key={index}>
-                      <img src={image.url} className="img-fluid" alt="" />
+                      <img src={image.url} className="img-fluid " alt="" />
                     </div>
                   ))}
                 </div>
               </div>
             </div>
 
-            <div className="col-6">
+            <div className="col-12 col-md-6">
               <div className="main-product-details">
                 <div className="border-bottom">
                   <h3 className="title">{product?.title}</h3>
@@ -214,7 +216,7 @@ const SingleProduct = (props) => {
                     <h3 className="product-heading">Color :</h3>
                     <Color setColor={setColor} color={product?.color} />
                   </div>
-                  <div className="d-flex align-items-center gap-15 flex-row mt-2 mb-3">
+                  <div className="d-flex align-items-center gap-15 mt-2 mb-3">
                     <h3 className="product-heading">Quantity :</h3>
                     <div className="">
                       <input
@@ -229,20 +231,22 @@ const SingleProduct = (props) => {
                         onChange={(e) => setQuantity(e.target.value)}
                       />
                     </div>
-                    <div className="d-flex align-items-center gap-30 ms-5">
-                      <button
-                        className="button"
-                        type="button"
-                        onClick={() => handlerAddToCard()}
-                      >
-                        <span>Add to Cart</span>
-                      </button>
-                      {/* <button className="button signup">
+                  </div>
+
+                  <div className="d-flex  align-items-sm-center gap-30 py-2">
+                    <button
+                      className="button"
+                      type="button"
+                      onClick={() => handlerAddToCard()}
+                    >
+                      <span>Add to Cart</span>
+                    </button>
+                    {/* <button className="button signup">
                         <span>Buy It Now</span>
                       </button> */}
-                    </div>
                   </div>
-                  <div className="d-flex align-items-center gap-15">
+
+                  <div className="d-flex align-items-center mt-2 gap-15">
                     {/* <div>
                       <a href="">
                         <TbGitCompare className="fs-5 me-2" /> Add to Compare
@@ -327,7 +331,7 @@ const SingleProduct = (props) => {
                   {orderedProduct && (
                     <div>
                       <a
-                        className="text-dark text-decoration-underline"
+                        className="d-none d-sm-block text-dark text-decoration-underline"
                         href="#"
                       >
                         Write a Review

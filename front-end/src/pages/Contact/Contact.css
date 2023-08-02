@@ -3,11 +3,11 @@
   padding: 30px 20px;
   border-radius: 15px;
   background-color: white;
-  gap: 15px;
+  gap: 30px;
 }
-.contact-inner-wrapper > div {
+/* .contact-inner-wrapper > div {
   width: 48%;
-}
+} */
 .contact-title {
   font-size: 26px;
   font-weight: 500;

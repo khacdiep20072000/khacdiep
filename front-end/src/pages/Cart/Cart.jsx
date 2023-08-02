@@ -50,10 +50,10 @@ const Cart = () => {
           <div className="row">
             <div className="col-12">
               <div className="cart-header py-3 d-flex justify-content-between align-items-center">
-                <h4 className="cart-col-1">Product</h4>
-                <h4 className="cart-col-2">Price</h4>
-                <h4 className="cart-col-3">Quantity</h4>
-                <h4 className="cart-col-4">Total</h4>
+                <h4 className="col-5">Product</h4>
+                <h4 className="col-2">Price</h4>
+                <h4 className="col-3">Quantity</h4>
+                <h4 className="d-none d-sm-flex col-2">Total</h4>
               </div>
 
               {cart ? (
@@ -62,15 +62,15 @@ const Cart = () => {
                     key={c._id}
                     className="cart-data py-3 mb-2 d-flex justify-content-between align-items-center"
                   >
-                    <div className="cart-col-1 gap-15 d-flex align-items-center">
-                      <div className="w-25">
+                    <div className="col-5 gap-15 d-flex align-items-center">
+                      <div className="d-none d-sm-flex w-25">
                         <img
                           src={c.product.images[0].url}
                           className="img-fluid"
                           alt="product"
                         />
                       </div>
-                      <div className="w-75">
+                      <div className="w-75 me-2">
                         <p>{c.product.title}</p>
                         {c.product.size ? <p>Size: {c.product.size}</p> : ""}
                         <p className="d-flex align-items-center gap-3">
@@ -86,10 +86,12 @@ const Cart = () => {
                         </p>
                       </div>
                     </div>
-                    <div className="cart-col-2">
-                      <h5 className="price">$ {c.price}</h5>
+
+                    <div className="col-2">
+                      <h5 className="price w-100">$ {c.price}</h5>
                     </div>
-                    <div className="cart-col-3 d-flex align-items-center gap-15">
+
+                    <div className="col-3 d-flex align-items-center gap-15">
                       <div>
                         <input
                           className="form-control"
@@ -108,7 +110,7 @@ const Cart = () => {
                         <AiFillDelete className="text-danger " />
                       </div>
                     </div>
-                    <div className="cart-col-4">
+                    <div className="d-none d-sm-flex col-2">
                       <h5 className="price">$ {c.quantity * c.price}</h5>
                     </div>
                   </div>
@@ -118,17 +120,22 @@ const Cart = () => {
               )}
             </div>
             <div className="col-12 py-2 mt-4">
-              <div className="d-flex justify-content-between align-items-baseline">
-                <Link to="/product" className="button">
+              <div className="d-flex flex-column justify-content-between align-items-baseline">
+                <div className="d-sm-flex justify-content-between w-100">
+                  <div>
+                    <h4>SubTotal: $ {totalAmount}</h4>
+                    <p>Taxes and shipping calculated at checkout</p>
+                  </div>
+
+                  <div>
+                    <Link to="/checkout" className="button">
+                      <span>Checkout</span>
+                    </Link>
+                  </div>
+                </div>
+                <Link to="/product" className="text-danger border-bottom mt-3">
                   <span>Continue To Shopping</span>
                 </Link>
-                <div className="d-flex flex-column align-items-end">
-                  <h4>SubTotal: $ {totalAmount}</h4>
-                  <p>Taxes and shipping calculated at checkout</p>
-                  <Link to="/checkout" className="button">
-                    <span>Checkout</span>
-                  </Link>
-                </div>
               </div>
             </div>
           </div>
