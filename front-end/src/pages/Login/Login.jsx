@@ -24,7 +24,7 @@ const Login = () => {
   const userState = useSelector((state) => state.auth);
   const { isSuccess } = userState;
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && userState.user !== null) {
       setTimeout(() => {
         navigate("/", { replace: true });
       }, 500);

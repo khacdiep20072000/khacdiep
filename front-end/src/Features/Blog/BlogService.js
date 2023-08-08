@@ -3,7 +3,7 @@ import { base_url } from "utils/base_url";
 
 const getBlogs = async (data) => {
   const res = await axios.get(
-    `${base_url}blog?${data.category ? `category=${data.category}` : ""}`
+    `${base_url}blog?${data?.category ? `category=${data.category}` : ""}`
   );
   if (res.data) {
     return res.data;

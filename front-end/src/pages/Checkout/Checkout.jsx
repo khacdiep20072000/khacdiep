@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { config } from "utils/axiosconfig";
-import { createOrder } from "Features/user/userSlice";
+import { createOrder, emptyCart } from "Features/user/userSlice";
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -152,7 +152,7 @@ const Checkout = () => {
           razorPayOrderId: response.razorpay_order_id,
         };
 
-        await axios.post(
+        const result = await axios.post(
           "http://localhost:4000/api/user/order/payment-verification",
           data,
           config
@@ -162,7 +162,7 @@ const Checkout = () => {
           shippingInfo,
           orderItems: cart,
           totalPrice: totalAmount,
-          paymentInfo: data,
+          paymentInfo: result.data,
         };
 
         setTimeout(() => {
@@ -171,6 +171,7 @@ const Checkout = () => {
 
         if (createdOrder && isSuccess) {
           setTimeout(() => {
+            dispatch(emptyCart());
             navigate("/order-detail", { replace: true });
           }, 400);
         }

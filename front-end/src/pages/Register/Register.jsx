@@ -35,7 +35,7 @@ const Register = () => {
   const newUserState = useSelector((state) => state.auth);
   const { isSuccess } = newUserState;
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && newUserState.newUser) {
       setTimeout(() => {
         navigate("/login", { replace: true });
       }, 1500);

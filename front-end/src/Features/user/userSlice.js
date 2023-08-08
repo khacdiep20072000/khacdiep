@@ -173,6 +173,17 @@ export const resetPassword = createAsyncThunk(
   }
 );
 
+export const emptyCart = createAsyncThunk(
+  "auth/empty-cart",
+  async (thunkAPI) => {
+    try {
+      return await userService.emptyCart();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 export const resetState = createAction("Reset_all");
 
 export const authSlice = createSlice({
@@ -372,7 +383,21 @@ export const authSlice = createSlice({
         state.isSuccess = true;
         state.isError = false;
         state.message = "Success";
-        toast.success("User updated successfully.");
+        if (state.isSuccess) {
+          const userCurrent = JSON.parse(localStorage.getItem("customer"));
+          const newUser = {
+            _id: userCurrent?._id,
+            token: userCurrent?.token,
+            email: action?.payload?.email,
+            mobile: action?.payload?.mobile,
+            name: action?.payload?.name,
+            address: action?.payload?.address,
+          };
+          localStorage.setItem("customer", JSON.stringify(newUser));
+          state.user = newUser;
+          state.informationUser = newUser;
+          toast.success("User updated successfully.");
+        }
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -433,6 +458,22 @@ export const authSlice = createSlice({
         state.isError = true;
         state.message = action.error;
         toast.error("Error");
+      })
+
+      .addCase(emptyCart.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(emptyCart.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.message = "Success";
+      })
+      .addCase(emptyCart.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+        state.message = action.error;
       })
 
       .addCase(resetState, () => initialState);

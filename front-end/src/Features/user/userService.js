@@ -101,6 +101,11 @@ const resetPassword = async (data) => {
   return res.data;
 };
 
+const emptyCart = async () => {
+  const res = await axios.put(`${base_url}user/empty-cart`, config);
+  return res.data;
+};
+
 const userService = {
   register,
   login,
@@ -116,6 +121,7 @@ const userService = {
   getMyInformation,
   forgotPasswordToken,
   resetPassword,
+  emptyCart,
 };
 
 export default userService;

@@ -28,6 +28,7 @@ const {
   getMonthTotalOrder,
   getAllOrders,
   getOrder,
+  emptyCart,
 } = require("../controller/userCtrl");
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 const { checkout, paymentVerification } = require("../controller/paymentCtrl");
@@ -51,7 +52,7 @@ router.get("/:id", authMiddleware, isAdmin, getUser);
 router.post("/cart/create-order", authMiddleware, createOrder);
 router.post("/admin-login", loginAdmin);
 router.post("/cart", authMiddleware, userCart);
-// router.delete("/empty-cart", authMiddleware, emptyCart);
+router.delete("/empty-cart", authMiddleware, emptyCart);
 router.delete(
   "/remove-product-cart/:cartItemId",
   authMiddleware,
